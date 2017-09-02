@@ -181,9 +181,17 @@ export default DS.JSONSerializer.extend({
         if (payload.includes.Entry) {
           for (let i = 0, l = payload.includes.Entry.length; i < l; i++) {
             let item = payload.includes.Entry[i];
+
+            let modelClass;
+            try {
+              modelClass = store.modelFor(item.sys.contentType.sys.id)
+            } catch (_error) {
+              continue;
+            }
+
             let {
               data
-            } = this.normalize(store.modelFor(item.sys.contentType.sys.id), item);
+            } = this.normalize(modelClass, item);
             entries.push(data);
           }
         }
